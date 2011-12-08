@@ -46,3 +46,4 @@ profile
 # ignore some web interface files if they exist
 web_interface/config.php
 web_interface/.htaccess
+web_interface/admin/.htaccess
