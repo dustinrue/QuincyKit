@@ -29,96 +29,138 @@
 	 * OTHER DEALINGS IN THE SOFTWARE.
 	 */
 
-define("VERSION_STATUS_UNKNOWN", 0);        // bug may get fixed in an unknown version
-define("VERSION_STATUS_ASSIGNED", 1);       // bug will get fixed in a defined version
-define("VERSION_STATUS_SUBMITTED", 2);      // bug is fixed in a defined version, and the version has been submitted to the publisher
-define("VERSION_STATUS_AVAILABLE", 3);      // bug is fixed in a defined version, and the version is available for the customer
-define("VERSION_STATUS_DISCONTINUED", 4);   // version is no longer maintained, don't accept crash logs
 
-// notify status per version
-define("NOTIFY_OFF", 0);                      // don't send notifications
-define("NOTIFY_ACTIVATED", 1);                // send notifications for first and for $notify_amount_group
-define("NOTIFY_ACTIVATED_AMOUNT", 2);         // send notifications for $notify_amount_group only
+// database server hostname
+$server                 = 'your.server.com';      
 
-// sending crash log ended in failure error codes
-define("FAILURE_DATABASE_NOT_AVAILABLE", -1);           // database cannot be accessed, check hostname, username, password and database name settings in config.php 
-define("FAILURE_INVALID_INCOMING_DATA", -2);           	// incoming data may not be added, because e.g. bundle identifier wasn't found 
-define("FAILURE_INVALID_POST_DATA", -3);           		// the post request didn't contain valid data 
-define("FAILURE_SQL_SEARCH_APP_NAME", -10);    			// SQL for finding the bundle identifier in the database failed
-define("FAILURE_SQL_FIND_KNOWN_PATTERNS", -11); 		// SQL for getting all the known bug patterns for the current app version in the database failed
-define("FAILURE_SQL_UPDATE_PATTERN_OCCURANCES", -12); 	// SQL for updating the occurances of this pattern in the database failed
-define("FAILURE_SQL_CHECK_BUGFIX_STATUS", -13); 		// SQL for checking the status of the bugfix version in the database failed
-define("FAILURE_SQL_ADD_PATTERN", -14); 				// SQL for creating a new pattern for this bug and set amount of occurrances to 1 in the database failed
-define("FAILURE_SQL_CHECK_VERSION_EXISTS", -15); 		// SQL for checking if the version is already added in the database failed
-define("FAILURE_SQL_ADD_VERSION", -16); 				// SQL for adding a new version in the database failed
-define("FAILURE_SQL_ADD_CRASHLOG", -17);                // SQL for adding crash log in the database failed
-define("FAILURE_SQL_ADD_SYMBOLICATE_TODO", -18);        // SQL for adding a symoblicate todo entry in the database failed
-define("FAILURE_XML_VERSION_NOT_ALLOWED", -20); 		// XML: Version string contains not allowed characters, only alphanumberical including space and . are allowed
-define("FAILURE_XML_SENDER_VERSION_NOT_ALLOWED", -21);  // XML: Sender ersion string contains not allowed characters, only alphanumberical including space and . are allowed
-define("FAILURE_VERSION_DISCONTINUED", -30);            // The app version causing this crash has been discontinued
-define("FAILURE_PHP_XMLREADER_CLASS", -40);             // PHP: XMLReader class is not available in PHP
-define("FAILURE_PHP_PROWL_CLASS", -41);                 // PHP: Prowl class is not available in PHP
-define("FAILURE_PHP_CURL_LIB", -41);                    // PHP: cURL library missing vital functions or does not support SSL. cURL w/SSL is required to execute ProwlPHP.
+// username to access the database
+$loginsql               = 'database_username';    
 
-define("SEARCH_TYPE_ID", 0);                            // Search for a crash ID
-define("SEARCH_TYPE_DESCRIPTION", 1);                   // Search for in the crash descriptions
-define("SEARCH_TYPE_CRASHLOG", 2);                      // Search for in the crashlogs
+// password for the above username
+$passsql                = 'database_password';    
 
-$statusversions = array(0 => 'Unknown', 1 => 'In development', 2 => 'Submitted', 3 => 'Available', 4 => 'Discontinued');
+// database name which contains the below listed tables
+$base                   = 'database_name';        
 
-$server = 'your.server.com';                    // database server hostname
-$loginsql = 'database_username';                // username to access the database
-$passsql = 'database_password';                 // password for the above username
-$base = 'database_name';                        // database name which contains the below listed tables
+// if set to true, all crash logs will be added and todo entries for 
+// symbolication will be added too otherwise the app identifiers need to be 
+// added in the UI and todo can be turned on individually
+$acceptallapps          = false;
 
-$dbcrashtable = 'crash';                        // contains the actual crash log data
-$dbgrouptable = 'crash_groups';                 // contains the automatically generated grouping definitions for crash log data
-$dbapptable = 'apps';                           // contains a list of allowed applications which crash logs will be accepted
-$dbversiontable = 'versions';                   // contains a list of versions per application with a status, that can be used to provide the user with some feedback
-$dbsymbolicatetable = 'symbolicated';           // contains a todo list of crash log data which has to be symbolicated by an external task (symbolicate.php)
+// activate push notifications via Prowl?
+$push_activated         = false;                  
 
-$acceptallapps = false;                         // if set to true, all crash logs will be added and todo entries for symbolication will be added too
-                                                // otherwise the app identifiers need to be added in the UI and todo can be turned on individually
+// Up to 5 comma separated prowl api keys which should get the notifications
+// can also be set per app, this is a global setting also effective when 
+// acceptallapps is true
+$push_prowlids          = '';        
 
-$push_activated = false;                        // activate push notifications via Prowl?
-$push_prowlids = '';                            // Up to 5 comma separated prowl api keys which should get the notifications
-                                                // can also be set per app, this is a global setting also effective when acceptallapps is true
+// Separate setting for Boxcar, so as to not interfere with Prowl config
+$boxcar_activated       = true; 
 
-$boxcar_activated = true;						// Separate setting for Boxcar, so as to not interfere with Prowl config
-$boxcar_uid = "";								// Boxcar user email
-$boxcar_pwd = "";								// Boxcar password
+// Boxcar user email
+$boxcar_uid             = "";                     
 
-$mail_activated = true;					        // activate email notifications
-$mail_addresses = '';                           // , separated mail addresses to send notification emails to
-                                                // can also be set per app, this is a global setting also effective when acceptallapps is true
+// Boxcar password
+$boxcar_pwd             = "";  
 
-$mail_from = 'sender@yourdomain.com';           // sender address used for notification emails
-$crash_url = 'http://www.yourserver.com/';      // if the mail should contain a link to the crash, at the base url like http://www.yourserver.com/
-                                                // "admin/crashes.php?..." with a direct link to the crash group will be added automatically!
+// activate email notifications
+$mail_activated         = true;
 
-$notify_amount_group = 10;                      // the amount of crashes found for a type which invokes a push notification to be send, 1 to deactivate
-$notify_default_version = NOTIFY_OFF;           // default behaviour for a new app version push behaviour
+// comma separated mail addresses to send notification emails to. Can also be 
+// set per app, this is a global setting also effective when acceptallapps 
+// is true
+$mail_addresses         = '';
 
-$default_amount_crashes = 5;				    // amount of crashes shown by default per pattern, enhances page loading speed in case there are a lot of crashes
+// sender address used for notification emails
+$mail_from              = 'sender@yourdomain.com';
 
-$color24h = "red";                              // color of timestamp if the latest crash is within the last 24h in Version view
-$color48h = "orange";                           // color of timestamp if the latest crash is within the last 48h in Version view
-$color72h = "black";                            // color of timestamp if the latest crash is within the last 72h in Version view
-$colorOther = "grey";                           // color of timestamp for older last crashes in Version view
+// if the mail should contain a link to the crash, at the base url like 
+// http://www.yourserver.com/admin/crashes.php?..." with a direct link to the 
+// crash group will be added automatically!
+$crash_url              = "http://" . $_HTTP['HOST_NAME'];
 
-$admintitle = "CrashReporter Admin Interface";  // Adjust this string to your own title string shown on top of every page
+// the amount of crashes found for a type which invokes a push notification to 
+// be send, 1 to deactivate
+$notify_amount_group    = 10;                      
 
-$createIssueTitle = "New crash type";           // The title given for a new issue
+// default behaviour for a new app version push behaviour
+$notify_default_version = NOTIFY_OFF;          
 
-$hockeyAppURL = 'ssl://beta.hockeyapp.net/';    // The HockeyApp server address to route the crashes to, this should normally never be edited!
+// amount of crashes shown by default per pattern, enhances page loading speed 
+// in case there are a lot of crashes
+$default_amount_crashes = 5;		
 
-date_default_timezone_set('Europe/Berlin');	    // set the default timezone (see http://de3.php.net/manual/en/timezones.php)
+// color of timestamp if the latest crash is within the last 24h in Version view
+$color24h               = "red";
+
+// color of timestamp if the latest crash is within the last 48h in Version view
+$color48h               = "orange";
+
+// color of timestamp if the latest crash is within the last 72h in Version view
+$color72h               = "black";
+
+// color of timestamp for older last crashes in Version view
+$colorOther             = "grey";  
+
+// Adjust this string to your own title string shown on top of every page
+$admintitle             = "CrashReporter Admin Interface";
+
+// The title given for a new issue
+$createIssueTitle       = "New crash type";
 
 
-$config[base_uri] = "/";                        // set base_uri to the URL QuincyKit scripts are installed to
-$config[base_dir] = $_SERVER[DOCUMENT_ROOT] . $config[base_uri];
+
+
+#
+# Database Table Names
+# 
+
+// contains the actual crash log data
+$dbcrashtable           = 'crash';                
+
+// contains the automatically generated grouping definitions for crash log data
+$dbgrouptable           = 'crash_groups';         
+
+// contains a list of allowed applications which crash logs will be accepted
+$dbapptable             = 'apps';                 
+
+// contains a list of versions per application with a status, that can be used 
+// to provide the user with some feedback
+$dbversiontable         = 'versions';
+
+// contains a todo list of crash log data which has to be symbolicated by an 
+// external task (symbolicate.php)
+$dbsymbolicatetable     = 'symbolicated';
+
+
+
+// The HockeyApp server address to route the crashes to, this should normally 
+// never be edited!
+$hockeyAppURL           = 'ssl://beta.hockeyapp.net/';    
+
+
+
+$statusversions         = array(
+                            0 => 'Unknown', 
+                            1 => 'In development', 
+                            2 => 'Submitted', 
+                            3 => 'Available', 
+                            4 => 'Discontinued'
+                          );
+
+// set the default timezone (see http://de3.php.net/manual/en/timezones.php)
+$config['time_zone']    = "Europe/Berlin";
+
+// set base_uri to the URL QuincyKit scripts are installed to
+$config[base_uri]       = "/"; 
+$config[base_dir]       = $_SERVER[DOCUMENT_ROOT] . $config[base_uri];
+
 // set the include path
-$include_path = get_include_path();
+$include_path           = get_include_path();
 ini_set(include_path, $include_path . ":" .
     $config[base_dir] . "/include");
+
+date_default_timezone_set($config['time_zone']);	
+require_once("defines.php");
 ?>
