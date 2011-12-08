@@ -1,0 +1,25 @@
+#Rename this file to .htaccess to password protect your admin folder
+#Create the .htpasswd using the htpasswd utility on your server
+
+# Redirect anything that isn't crash_v200.php to the admin page
+<LocationMatch ^/$>
+  Redirect / http://crashreport.controlplaneapp.com/admin/
+</LocationMatch>
+
+# Require all requests be authenticated using the htpasswd file
+<Location />
+  AuthType Basic
+  AuthName "QuincyKit Crash Reports"
+  AuthUserFile /full/path/to/htpasswd
+  Order Deny,Allow
+  Deny from all
+  Require valid-user
+  satisfy any
+</Location>
+
+# Allow crash_v200.php without user authentication
+<Location /crash_v200.php>
+  Order Allow,Deny
+  Allow from all
+</Location>
+
