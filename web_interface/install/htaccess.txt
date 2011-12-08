@@ -1,0 +1,11 @@
+# Copy this file to .htaccess to password protect your document root folder
+
+# Redirect anything that isn't crash_v200.php to the admin page
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^crash_v200\.php
+RewriteRule ^$             http://%{HTTP_HOST}/admin/ [R]
+
+# Redirect access to the other directories to / 
+# which will lead people to /admin/
+RewriteRule ^install(.+)   http://%{HTTP_HOST}/       [R]
+RewriteRule ^local(.+)     http://%{HTTP_HOST}/       [R]

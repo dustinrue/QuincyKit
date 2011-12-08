@@ -1,0 +1,13 @@
+# Copy this file to admin/.htaccess to password protect your admin folder
+# Create a htpasswd using the htpasswd utility on your server and
+# set AuthUserFile to the path of the htpasswd file
+
+# Require all requests be authenticated using the htpasswd file
+AuthType Basic
+AuthName "QuincyKit Crash Reports"
+AuthUserFile /tmp/htpasswd
+Order Deny,Allow
+Deny from all
+Require valid-user
+satisfy any
+
