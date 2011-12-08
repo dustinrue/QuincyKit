@@ -43,3 +43,6 @@ Backup[ ]of[ ]*.numbers/
 *~.nib
 profile
 
+# ignore some web interface files if they exist
+config.php
+.htaccess

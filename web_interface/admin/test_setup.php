@@ -33,7 +33,7 @@
 // on the installed server
 //
 
-require_once('config.php');
+require_once('../config.php');
 
 echo "XMLReader: ";
 if (!class_exists('XMLReader', false)) echo "FAILED"; else echo "passed";
