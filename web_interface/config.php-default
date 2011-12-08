@@ -29,6 +29,8 @@
 	 * OTHER DEALINGS IN THE SOFTWARE.
 	 */
 
+// install directory, off of the document root
+$base_uri = "/"
 
 // database server hostname
 $server                 = 'your.server.com';      
@@ -78,7 +80,10 @@ $mail_from              = 'sender@yourdomain.com';
 // if the mail should contain a link to the crash, at the base url like 
 // http://www.yourserver.com/admin/crashes.php?..." with a direct link to the 
 // crash group will be added automatically!
-$crash_url              = "http://" . $_HTTP['HOST_NAME'];
+$crash_url              = "http://" . $_SERVER['SERVER_NAME'] . $base_uri;
+
+// set the default timezone (see http://de3.php.net/manual/en/timezones.php)
+$config['time_zone']    = "Europe/Berlin";
 
 // the amount of crashes found for a type which invokes a push notification to 
 // be send, 1 to deactivate
@@ -149,11 +154,8 @@ $statusversions         = array(
                             4 => 'Discontinued'
                           );
 
-// set the default timezone (see http://de3.php.net/manual/en/timezones.php)
-$config['time_zone']    = "Europe/Berlin";
-
 // set base_uri to the URL QuincyKit scripts are installed to
-$config[base_uri]       = "/"; 
+$config[base_uri]       = $base_uri; 
 $config[base_dir]       = $_SERVER[DOCUMENT_ROOT] . $config[base_uri];
 
 // set the include path
