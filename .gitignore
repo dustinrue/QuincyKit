@@ -44,5 +44,5 @@ Backup[ ]of[ ]*.numbers/
 profile
 
 # ignore some web interface files if they exist
-config.php
-.htaccess
+web_interface/config.php
+web_interface/.htaccess
