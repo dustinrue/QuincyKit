@@ -161,7 +161,8 @@ $config[base_dir]       = $_SERVER[DOCUMENT_ROOT] . $config[base_uri];
 // set the include path
 $include_path           = get_include_path();
 ini_set(include_path, $include_path . ":" .
-    $config[base_dir] . "/include");
+    $config[base_dir] . "/include/Smarty:");
+    $config[base_dir] . "/include:");
 
 date_default_timezone_set($config['time_zone']);	
 require_once("defines.php");
