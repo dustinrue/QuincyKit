@@ -16,9 +16,9 @@ if [ $USECACHED == "false" ]; then
 fi
 
 tar zxf "$FILENAME-$VERSION.tar.gz"
-rm -rf ../../../include/Smarty
-mkdir  ../../../include/Smarty
-cp -af $FILENAME-$VERSION/libs/* ../../../include/Smarty
+rm -rf ../../../admin/include/Smarty
+mkdir  ../../../admin/include/Smarty
+cp -af $FILENAME-$VERSION/libs/* ../../../admin/include/Smarty
 rm -rf $FILENAME-$VERSION
 rm $FILENAME-$VERSION.tar.gz -f
 echo "Done"

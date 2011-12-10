@@ -47,5 +47,5 @@ profile
 web_interface/config.php
 web_interface/.htaccess
 web_interface/admin/.htaccess
-web_interface/include/Smarty
+web_interface/admin/include/Smarty/*
 web_interface/install/bin/tmp
