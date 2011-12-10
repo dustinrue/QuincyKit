@@ -2,9 +2,14 @@
 
   require_once("../config.php");
   require_once("db.class.php");
-  require_once("page.inc.php");
+  require_once("page.class.php");
 
   $page = new Page();
+
+  // these directories must exist and must be writable by the process
+  // under which apache is running
+  $page->setCacheDir($config['cache_dir']);
+  $page->setCompileDir($config['compile_dir']);
 
   // web interface requires clean URLs so all URLs will come in 
   // in the form of index.php?q= and then the query string
@@ -30,16 +35,11 @@
   // database based
   // The action or a file included by the action is responsible for
   // setting which template needs to be rendered for the user
-  $page->setTheme($config['template_dir'],$config['defaulttheme']);
+//  $page->setTheme($config['template_dir'],$config['defaulttheme']);
 
 
-  // these directories must exist and must be writable by the process
-  // under which apache is running
-  $page->compile_dir  = $config['compile_dir'];
-  $page->cache_dir    = $config['cache_dir'];
- 
   // called for action better exist or this is going to simply die
-  require_once($config['base_dir'] . "/actions/" . "/" . $action . ".inc.php");
+  require_once($config['base_dir'] . "/admin/actions/" . "/" . $action . ".inc.php");
 
 
   // render the page

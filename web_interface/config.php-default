@@ -158,10 +158,16 @@ $statusversions         = array(
 $config[base_uri]       = $base_uri; 
 $config[base_dir]       = $_SERVER[DOCUMENT_ROOT] . $config[base_uri];
 
+// smarty config options
+$config['smarty_dir']    = $config['base_dir'] . "/admin/base/include/Smarty";
+$config['compile_dir']   = $config['base_dir'] . "/admin/base/templates_c";
+$config['template_dir']  = $config['base_dir'] . "/admin/templates/";
+$config['cache_dir']     = $config['base_dir'] . "/admin/base/templates_cache";
+
 // set the include path
 $include_path           = get_include_path();
 ini_set(include_path, $include_path . ":" .
-    $config[base_dir] . "/include/Smarty:");
+    $config[base_dir] . "/include/Smarty:" .
     $config[base_dir] . "/include:");
 
 date_default_timezone_set($config['time_zone']);	

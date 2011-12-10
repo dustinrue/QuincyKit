@@ -1,7 +1,7 @@
 <?php
   // a class to extend the smarty class.  This will allow me to
   // setup all the paths once, instead of per script
-  //require_once("config.inc.php");
+ // require_once("../config.php");
   require_once("Smarty.class.php");
 
   class Page extends Smarty {
@@ -13,20 +13,11 @@
     var $logging      = array(); //each element is one log entry string
     
 
-    function Page() {
-      global $config;
-      $this->Smarty();
-      $this->template_dir = $config['template_dir'];
-      $this->compile_dir  = $config['compile_dir'];
-      $this->cache_dir    = $config['cache_dir'];
-      $this->caching = false;
-    }
-
     function __construct() {
-      $this->Page();
+      parent::__construct(); 
     }
 
-    function __destroy() {
+    function __destruct() {
       
     }
 
@@ -84,7 +75,7 @@
     }
 
     function setTheme($template_dir,$theme) {
-      $this->template_dir = $template_dir . "/$theme/tpl";
+      $this->template_dir = $template_dir . "/";
       $this->theme = $theme;
     }
 
@@ -151,4 +142,4 @@
     }
 
   }
-  ?>
+?>
