@@ -3,8 +3,19 @@
   require_once("../config.php");
   require_once("db.class.php");
   require_once("page.class.php");
+  require_once("QuincyData.class.php");
+  require_once("QuincyApplication.class.php");
 
   $page = new Page();
+  $qdconn= new QuincyData();
+
+  $qdconn->setDatabase($base);
+  $qdconn->setHostname($server);
+  $qdconn->setUsername($loginsql);
+  $qdconn->setPassword($passsql);
+
+  $qdconn->Connect();
+
 
   // these directories must exist and must be writable by the process
   // under which apache is running
@@ -44,4 +55,5 @@
 
   // render the page
   $page->render();
+  $qdconn->Destroy();
 ?>

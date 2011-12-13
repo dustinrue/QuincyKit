@@ -2,8 +2,9 @@
 
 	/*
 	 * Author: Andreas Linde <mail@andreaslinde.de>
+         * Author: Dustin Rue <ruedu@dustinrue.com>
 	 *
-	 * Copyright (c) 2009-2011 Andreas Linde & Kent Sutherland.
+	 * Copyright (c) 2009-2011 Andreas Linde, Kent Sutherland & Dustin Rue.
 	 * All rights reserved.
 	 *
 	 * Permission is hereby granted, free of charge, to any person
@@ -28,6 +29,143 @@
 	 * OTHER DEALINGS IN THE SOFTWARE.
 	 */
 
+  require_once("QuincyApplication.class.php");
+
+  class QuincyData extends MySQL {
+    var $dbapptable;
+    var $dbcrashtable;
+    var $dbgrouptable;
+    var $dbversiontable;
+    var $dbsymbolicatetable;
+
+    public function __construct() {
+      parent::__construct();
+      $this->dbapptable         = "apps";
+      $this->dbcrashtable       = "crash";
+      $this->dbgrouptable       = "crash_groups";
+      $this->dbversiontable     = "versions";
+      $this->dbsymbolicatetable = "symbolicated";
+    }
+
+    /**
+     * @brief Adds or Updates an Application in the database
+     *
+     * @param A QuincyApplication object
+     */
+    public function addUpdateApplication(&$qa) {
+      $bundleidentifier    = $qa->bundleIdentifier();
+      $name                = $qa->name();
+      $symbolicate         = $qa->symbolicate();
+      $issuetrackrurl      = $qa->issueTrackerURL();
+      $emails              = $qa->emails();
+      $pushids             = $qa->pushIDs();
+      $hockeyappidentifier = $qa->hockeyAppIdentifier();
+      $appid               = $qa->appID();
+
+
+      // insert new app
+      // version is not available, so add it with status VERSION_STATUS_AVAILABLE
+
+      if ($appid != NULL) {
+        $query = "INSERT INTO " . $this->dbapptable . " (
+                    bundleidentifier, 
+                    name, 
+                    symbolicate, 
+                    issuetrackerurl, 
+                    notifyemail, 
+                    notifypush, 
+                    hockeyappidentifier
+                  ) 
+                  VALUES (
+                    '".$bundleidentifier."', 
+                    '".$name."', 
+                    ".$symbolicate.", 
+                    '".$issuetrackerurl."', 
+                    '".$emails."', 
+                    '".$pushids."', 
+                    '".$hockeyappidentifier."'
+                  )";
+        }
+        else {
+          $query = "UPDATE ".$dbapptable." 
+                    SET symbolicate = ".$symbolicate.", 
+                        name = '".$name."', 
+                        issuetrackerurl = '".$issuetrackerurl."', 
+                        hockeyappidentifier = '".$hockeyappidentifier."', 
+                        notifyemail = '".$emails."', 
+                        notifypush = '".$pushids."' 
+                    WHERE id = ".$id;
+        }
+
+        $this->query($query);
+    }
+
+    /**
+      * @brief Gets configured application[s] from the database
+      *
+      * @param (optional) Application Id as assigned by the database system
+      */
+    public function getApplication($appid = null) {
+      $query = "SELECT bundleidentifier, symbolicate, id, name, issuetrackerurl, notifyemail, notifypush, hockeyappidentifier 
+                FROM " . $this->dbapptable . " 
+                ORDER BY bundleidentifier asc, symbolicate desc";
+
+      if ($appid != null) {
+         $query .= " WHERE id = $appid";
+      }  
+
+      $this->query($query);
+
+      while ($this->NextRecord()) {
+        $tmpApp = new QuincyApplication();
+
+        $tmpApp->setBundleIdentifier($this->getColumn('bundleidentifier'));
+        $tmpApp->setSymbolicate($this->getColumn('symbolicate'));
+        $tmpApp->setAppId($this->getColumn('id'));
+        $tmpApp->setName($this->getColumn('name'));
+        $tmpApp->setIssueTrackerURL($this->getColumn('issuetrackerurl'));
+        $tmpApp->setEmails($this->getColumn('notifyemail'));
+        $tmpApp->setPushIDs($this->getColumn('notifypush'));
+        $tmpApp->setHockeyAppIdentifier($this->getColumn('hockeyappidentifer'));
+
+        $apps[] = &$tmpApp;
+      }
+
+      return $apps;
+    }
+
+    /**
+      * @brief Returns the number of crashes for a given bundle identifier
+      *
+      * @param bundleidentifer
+      */
+    public function getNumberofCrashesForBundle($bundleidentifier) {
+      $query = "SELECT count(1) AS numberOfCrashes
+                 FROM " . $this->dbcrashtable . " 
+                 WHERE bundleidentifier = '" . $bundleidentifier . "'";
+
+      $this->query($query);
+      $this->moveFirst();
+
+      return $this->getColumn('numberOfCrashes');
+
+   }
+    public function deleteApplication($id) {
+      $query = "DELETE FROM ".$dbapptable." WHERE id = ".$id;
+    }
+
+    public function setSymbolicate($id, $symbolicate) {
+      $query = "UPDATE ".$dbapptable." SET symbolicate = ".$symbolicate." WHERE id = ".$id;
+    }
+
+  }
+/*
+} else if ($symbolicate != "" && $id != "") {
+} else if ($id != "" && $symbolicate == "") {
+
+?>
+<?php
+/*
 //
 // This is the main admin UI script
 //
@@ -178,5 +316,5 @@ if ($numrows > 0) {
 mysql_close($link);
 
 echo '</body></html>';
-
+*/
 ?>
