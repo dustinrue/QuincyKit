@@ -66,7 +66,7 @@
       // insert new app
       // version is not available, so add it with status VERSION_STATUS_AVAILABLE
 
-      if ($appid != NULL) {
+      if ($appid == NULL) {
         $query = "INSERT INTO " . $this->dbapptable . " (
                     bundleidentifier, 
                     name, 
@@ -87,14 +87,14 @@
                   )";
         }
         else {
-          $query = "UPDATE ".$dbapptable." 
+          $query = "UPDATE " . $this->dbapptable . " 
                     SET symbolicate = ".$symbolicate.", 
                         name = '".$name."', 
                         issuetrackerurl = '".$issuetrackerurl."', 
                         hockeyappidentifier = '".$hockeyappidentifier."', 
                         notifyemail = '".$emails."', 
                         notifypush = '".$pushids."' 
-                    WHERE id = ".$id;
+                    WHERE id = ".$appid;
         }
 
         $this->query($query);
@@ -127,8 +127,9 @@
         $tmpApp->setEmails($this->getColumn('notifyemail'));
         $tmpApp->setPushIDs($this->getColumn('notifypush'));
         $tmpApp->setHockeyAppIdentifier($this->getColumn('hockeyappidentifer'));
+        $tmpApp->setAppID($this->getColumn('id'));
 
-        $apps[] = &$tmpApp;
+        $apps[] = $tmpApp;
       }
 
       return $apps;
@@ -151,7 +152,9 @@
 
    }
     public function deleteApplication($id) {
-      $query = "DELETE FROM ".$dbapptable." WHERE id = ".$id;
+      $query = "DELETE FROM " . $this->dbapptable . " WHERE id = ".$id;
+
+      $this->query($query);
     }
 
     public function setSymbolicate($id, $symbolicate) {

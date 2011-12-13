@@ -42,7 +42,35 @@
 if ($acceptallapps) 
   $page->redirect("admin/app_versions");
 
+// see if we're supposed to be performing some action
+$action = $page->popQueryString();
+
+switch ($action) {
+  case "delete":
+        $qdconn->deleteApplication($page->popQueryString());
+        break;
+  case "update":
+  case "add":
+        $tmpApp = new QuincyApplication();
+
+        $appid = $page->popQueryString();
+        $tmpApp->setAppId($appid);
+        $tmpApp->setBundleIdentifier($_POST['bundleidentifier']);
+        $tmpApp->setName($_POST['name']);
+        $tmpApp->setEmails($_POST['emails']);
+        $tmpApp->setPushIDs($_POST['pushids']);
+        $tmpApp->setIssueTrackerURL($_POST['issuetrackerurl']);
+        $tmpApp->setHockeyAppIdentifier($_POST['hockeyappidentifier']);
+        $tmpApp->setSymbolicate($_POST['symbolicate']);
+
+        $qdconn->addUpdateApplication($tmpApp);
+        break;
+  default;
+        break;
+}
+
 $page->setTemplate('app_name.tpl');
+$page->assign('pageTitle', '- Apps');
 
 $apps = $qdconn->getApplication();
 
@@ -53,53 +81,11 @@ foreach ($apps as $app) {
 $page->assign('apps',$apps);
 $page->assign('numberOfCrashes', $numberOfCrashes);
 
-//$page->assign('apps', $qdconn->getApplication());
 /*
-require_once('../config.php');
-require_once('common.inc');
-
-if ($acceptallapps)
-{
-	die('<html><head><META http-equiv="refresh" content="0;URL=app_versions.php"></head><body></body></html>'); 
-}
-
-init_database();
+//TODO:
 parse_parameters(',bundleidentifier,symbolicate,id,name,issuetrackerurl,hockeyappidentifier,pushids,emails,');
 
-if (!isset($bundleidentifier)) $bundleidentifier = "";
-if (!isset($symbolicate)) $symbolicate = "";
-if (!isset($id)) $id = "";
-if (!isset($name)) $name = "";
-if (!isset($issuetrackerurl)) $issuetrackerurl = "";
-if (!isset($hockeyappidentifier)) $hockeyappidentifier = "";
-if (!isset($pushids)) $pushids = "";
-if (!isset($emails)) $emails = "";
 
-$query = "";
-// update the app
-if ($id != "" && $symbolicate != "") {
-	$query = "UPDATE ".$dbapptable." SET symbolicate = ".$symbolicate.", name = '".$name."', issuetrackerurl = '".$issuetrackerurl."', hockeyappidentifier = '".$hockeyappidentifier."', notifyemail = '".$emails."', notifypush = '".$pushids."' WHERE id = ".$id;
-} else if ($bundleidentifier != "" && $id == "" && $symbolicate != "") {
-	// insert new app
-	// version is not available, so add it with status VERSION_STATUS_AVAILABLE
-	$query = "INSERT INTO ".$dbapptable." (bundleidentifier, name, symbolicate, issuetrackerurl, notifyemail, notifypush, hockeyappidentifier) values ('".$bundleidentifier."', '".$name."', ".$symbolicate.", '".$issuetrackerurl."', '".$emails."', '".$pushids."', '".$hockeyappidentifier."')";
-} else if ($symbolicate != "" && $id != "") {
-	$query = "UPDATE ".$dbapptable." SET symbolicate = ".$symbolicate." WHERE id = ".$id;
-} else if ($id != "" && $symbolicate == "") {
-	// delete a version
-	$query = "DELETE FROM ".$dbapptable." WHERE id = ".$id;
-}
-if ($query != "")
-	$result = mysql_query($query) or die(end_with_result('Error in SQL '.$query));
-
-show_header('- Apps');
-
-echo '<h2><a href="app_name.php">Apps</a></h2>';
-
-$cols = '<colgroup><col width="230"/><col width="200"/><col width="200"/><col width="150"/><col width="150"/></colgroup>';
-echo '<table>'.$cols;
-echo "<tr><th>Bundle identifier / Name</th><th>Email - / Push Notifications</th><th>Issue Tracker / HockeyApp</th><th>Crashes</th><th>Actions</th></tr>";
-echo '</table>';
 
 if (!$acceptallapps)
 {
@@ -128,8 +114,6 @@ if (!$acceptallapps)
 	echo '</table></form>';
 }
 
-// get all applications and their symbolication status
-$query = "SELECT bundleidentifier, symbolicate, id, name, issuetrackerurl, notifyemail, notifypush, hockeyappidentifier FROM ".$dbapptable." ORDER BY bundleidentifier asc, symbolicate desc";
 $result = mysql_query($query) or die(end_with_result('Error in SQL '.$query));
 
 $numrows = mysql_num_rows($result);
