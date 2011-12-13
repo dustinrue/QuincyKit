@@ -11,7 +11,8 @@
     var $headers      = array();
     var $widgets      = array();
     var $logging      = array(); //each element is one log entry string
-    
+    // suppress a notify from smarty that theme isn't defined
+    var $theme;    
 
     function __construct() {
       parent::__construct(); 

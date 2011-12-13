@@ -36,6 +36,12 @@
 // should be turned on or not
 //
 
+// check to see if $acceptallapps is true and if it is
+// redirect to the versions page
+
+if ($acceptallapps) 
+  $page->redirect("admin/app_versions");
+
 $page->setTemplate('app_name.tpl');
 
 $apps = $qdconn->getApplication();

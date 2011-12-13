@@ -6,8 +6,8 @@
   require_once("QuincyData.class.php");
   require_once("QuincyApplication.class.php");
 
-  $page = new Page();
-  $qdconn= new QuincyData();
+  $page   = new Page();
+  $qdconn = new QuincyData();
 
   $qdconn->setDatabase($base);
   $qdconn->setHostname($server);
@@ -50,10 +50,13 @@
 
 
   // called for action better exist or this is going to simply die
-  require_once($config['base_dir'] . "/admin/actions/" . "/" . $action . ".inc.php");
+  require_once($config['base_dir'] . "admin/actions" . "/" . $action . ".inc.php");
 
 
   // render the page
   $page->render();
+
+  // issue a destroy to qdconn, if keepstats is set to true (the default)
+  // some useful stats will be displayed in commented html
   $qdconn->Destroy();
 ?>
