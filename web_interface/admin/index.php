@@ -39,6 +39,10 @@
     $page->setQueryString(explode("/",$_GET[q]));
 
     $action = $page->popQueryString();
+
+    if ($action == "") {
+      $action = $config['default_action'];
+    }
   }
 
 

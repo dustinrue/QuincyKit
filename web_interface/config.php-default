@@ -144,7 +144,8 @@ $dbsymbolicatetable     = 'symbolicated';
 // never be edited!
 $hockeyAppURL           = 'ssl://beta.hockeyapp.net/';    
 
-
+// What is the action if one isn't given?
+$config['action']       = "app_name";
 
 $statusversions         = array(
                             0 => 'Unknown', 
