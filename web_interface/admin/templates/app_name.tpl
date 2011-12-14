@@ -87,7 +87,7 @@
     <td>
       <select name='symbolicate' onchange='javascript:document.update{$currentapp->appID()}.submit();'>
         <option value="0">Don't symbolicate</option>
-        <option value="1" selected>Symbolicate</option>
+        <option value="1" {if $currentapp->symbolicate() == 1} selected{/if}>Symbolicate</option>
       </select><br>
       {assign var="bundleid" value=$currentapp->bundleIdentifier()}
       {$numberOfCrashes.$bundleid}

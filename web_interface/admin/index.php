@@ -40,11 +40,11 @@
 
     $action = $page->popQueryString();
 
-    if ($action == "") {
-      $action = $config['default_action'];
-    }
   }
 
+  if (strlen($action) == 0) {
+    $action = $config['default_action'];
+  }
 
   // the "theme" is determined by the config file but could easily be 
   // database based
