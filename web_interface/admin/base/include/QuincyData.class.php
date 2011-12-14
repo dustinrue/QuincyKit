@@ -56,7 +56,7 @@
       $bundleidentifier    = $qa->bundleIdentifier();
       $name                = $qa->name();
       $symbolicate         = $qa->symbolicate();
-      $issuetrackrurl      = $qa->issueTrackerURL();
+      $issuetrackerurl     = $qa->issueTrackerURL();
       $emails              = $qa->emails();
       $pushids             = $qa->pushIDs();
       $hockeyappidentifier = $qa->hockeyAppIdentifier();
@@ -126,7 +126,7 @@
         $tmpApp->setIssueTrackerURL($this->getColumn('issuetrackerurl'));
         $tmpApp->setEmails($this->getColumn('notifyemail'));
         $tmpApp->setPushIDs($this->getColumn('notifypush'));
-        $tmpApp->setHockeyAppIdentifier($this->getColumn('hockeyappidentifer'));
+        $tmpApp->setHockeyAppIdentifier($this->getColumn('hockeyappidentifier'));
         $tmpApp->setAppID($this->getColumn('id'));
 
         $apps[] = $tmpApp;

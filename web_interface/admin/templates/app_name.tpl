@@ -73,7 +73,7 @@
 
   <tr align='center'>
     <td>
-      <a href='app_versions.php?bundleidentifier={$currentapp->bundleIdentifier()}' placeholder='com.yourcompany.appidentifier'>{$currentapp->bundleIdentifier()}</a><br>
+      <a href='/admin/app_versions/{$currentapp->bundleIdentifier()}' placeholder='com.yourcompany.appidentifier'>{$currentapp->bundleIdentifier()}</a><br>
       <input type='text' name='name' size='25' maxlength='250' value='{$currentapp->name}' placeholder='Application Name'>
     </td>
     <td class='message'>
