@@ -157,10 +157,6 @@
       $this->query($query);
     }
 
-    public function setSymbolicate($id, $symbolicate) {
-      $query = "UPDATE ".$dbapptable." SET symbolicate = ".$symbolicate." WHERE id = ".$id;
-    }
-
   }
 /*
 } else if ($symbolicate != "" && $id != "") {
