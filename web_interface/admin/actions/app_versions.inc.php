@@ -60,14 +60,6 @@ if (!isset($deletecrashes)) $deletecrashes = -1;
 
 // add the new app & version
 if ($version != "" && $deletecrashes == "1") {
-	$query = "DELETE FROM ".$dbsymbolicatetable." WHERE crashid in (select id from ".$dbcrashtable." where bundleidentifier = '".$bundleidentifier."' and version = '".$version."')";
-	$result = mysql_query($query) or die(end_with_result('Error in SQL '.$query));
-
-	$query = "DELETE FROM ".$dbcrashtable." WHERE bundleidentifier = '".$bundleidentifier."' and version = '".$version."'";
-	$result = mysql_query($query) or die(end_with_result('Error in SQL '.$query));
-	
-    $query = "DELETE FROM ".$dbgrouptable." WHERE bundleidentifier = '".$bundleidentifier."' and affected = '".$version."'";
-    $result = mysql_query($query) or die(end_with_result('Error in SQL '.$query));
 } else if ($bundleidentifier != "" && $status != "" && $id == "" && $version != "") {
 	$query = "SELECT id FROM ".$dbversiontable." WHERE bundleidentifier = '".$bundleidentifier."' and version = '".$row[1]."'";
 	$result = mysql_query($query) or die(end_with_result('Error in SQL '.$query));

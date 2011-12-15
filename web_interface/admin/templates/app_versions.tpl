@@ -115,84 +115,48 @@
 
 
 <!-- this section loops -->
-<form name='update6' action='app_versions.php' method='get' id=
-"update6"><input type='hidden' name='id' value='6'><input type=
-'hidden' name='bundleidentifier' value=
-'com.dustinrue.ControlPlane'>
+{foreach $apps as $currentapp}
+<form name='update6' action='app_versions.php' method='get' id="update6">
+<input type='hidden' name='id' value='6'>
+<input type='hidden' name='bundleidentifier' value='com.dustinrue.ControlPlane'>
 <table>
-<colgroup>
-<col width="220">
-<col width="80">
-<col width="120">
-<col width="80">
-<col width="80">
-<col width="80">
-<col width="160"></colgroup>
-<tr align='center'>
-<td>com.dustinrue.ControlPlane</td>
-<td>1.1.1</td>
-<td><select name='status' onchange=
-'javascript:document.update6.submit();'>
-<option value='0' selected>Unknown</option>
-<option value='1'>In development</option>
-<option value='2'>Submitted</option>
-<option value='3'>Available</option>
-<option value='4'>Discontinued</option>
-</select></td>
-<td><select name='notify' onchange=
-'javascript:document.update6.submit();'>
-<option value="0" selected>OFF</option>
-<option value="1">ALL</option>
-<option value="2">&gt; 10</option>
-</select></td>
-<td>0</td>
-<td>0</td>
-<td></td>
-</tr>
+  <colgroup>
+    <col width="220">
+    <col width="80">
+    <col width="120">
+    <col width="80">
+    <col width="80">
+    <col width="80">
+    <col width="160">
+  </colgroup>
+  <tr align='center'>
+    <td>com.dustinrue.ControlPlane</td>
+    <td>1.1.1</td>
+    <td>
+      <select name='status' onchange='javascript:document.update6.submit();'>
+        <option value='0' selected>Unknown</option>
+        <option value='1'>In development</option>
+        <option value='2'>Submitted</option>
+        <option value='3'>Available</option>
+        <option value='4'>Discontinued</option>
+      </select>
+    </td>
+    <td>
+      <select name='notify' onchange='javascript:document.update6.submit();'>
+        <option value="0" selected>OFF</option>
+        <option value="1">ALL</option>
+        <option value="2">&gt; 10</option>
+      </select>
+    </td>
+    <td>0</td>
+    <td>0</td>
+    <td></td>
+  </tr>
 </table>
 </form>
-<form name='update5' action='app_versions.php' method='get' id=
-"update5"><input type='hidden' name='id' value='5'><input type=
-'hidden' name='bundleidentifier' value=
-'com.dustinrue.ControlPlane'>
-<table>
-<colgroup>
-<col width="220">
-<col width="80">
-<col width="120">
-<col width="80">
-<col width="80">
-<col width="80">
-<col width="160"></colgroup>
-<tr align='center'>
-<td>com.dustinrue.ControlPlane</td>
-<td><a href=
-'groups.php?bundleidentifier=com.dustinrue.ControlPlane&amp;version=1.1.0'>
-1.1.0</a></td>
-<td><select name='status' onchange=
-'javascript:document.update5.submit();'>
-<option value='0'>Unknown</option>
-<option value='1'>In development</option>
-<option value='2'>Submitted</option>
-<option value='3' selected>Available</option>
-<option value='4'>Discontinued</option>
-</select></td>
-<td><select name='notify' onchange=
-'javascript:document.update5.submit();'>
-<option value="0">OFF</option>
-<option value="1" selected>ALL</option>
-<option value="2">&gt; 10</option>
-</select></td>
-<td>24</td>
-<td>59</td>
-<td><a href=
-'app_versions.php?deletecrashes=1&amp;bundleidentifier=com.dustinrue.ControlPlane&amp;version=1.1.0'
-class='button redButton' onclick=
-'return confirm("Do you really want to delete all items?");'>Delete
-Crashes</a></td>
-</tr>
-</table>
-</form>
+{/foreach}
+
+
 <script type="text/javascript">
 $(document).ready(function(){
 

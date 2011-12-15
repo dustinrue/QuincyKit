@@ -49,3 +49,4 @@ web_interface/.htaccess
 web_interface/admin/.htaccess
 web_interface/admin/include/Smarty/*
 web_interface/install/bin/tmp
+web_interface/admin/base/templates_c/*

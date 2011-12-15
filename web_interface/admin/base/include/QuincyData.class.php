@@ -157,6 +157,30 @@
       $this->query($query);
     }
 
+    /**
+     * @brief Deletes all crashes for 
+     */
+    public function deleteCrashesForBundleAndVersion($bundleidentifier, $version) {
+      $query = "DELETE FROM " . $this->dbsymbolicatetable . "
+                WHERE crashid IN (
+                  SELECT id FROM " . $this->dbcrashtable . " 
+                  WHERE bundleidentifier = '" . $bundleidentifier . "' 
+                    AND version = '" . $version . "'
+                )";
+      $this->query($query);
+
+      $query = "DELETE FROM " . $this->dbcrashtable . " 
+                WHERE bundleidentifier = '" . $bundleidentifier . "' 
+                  AND version = '" . $version . "'";
+	
+      $this->query($query);
+
+      $query = "DELETE FROM " . $this->dbgrouptable . " 
+                WHERE bundleidentifier = '" . $bundleidentifier . "' 
+                  AND affected = '" . $version . "'";
+      $this->query($query);
+    }
+
   }
 /*
 } else if ($symbolicate != "" && $id != "") {
