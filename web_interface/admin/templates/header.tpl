@@ -6,7 +6,7 @@
   <meta name="generator" content=
   "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
 
-  <title>CrashReporter Admin Interface - Apps</title>
+  <title>CrashReporter Admin Interface {$pageTitle}</title>
   <link rel="stylesheet" href="/admin/blueprint/screen.css" type=
   "text/css" media="screen, projection">
   <link rel="stylesheet" href="/admin/blueprint/print.css" type="text/css"

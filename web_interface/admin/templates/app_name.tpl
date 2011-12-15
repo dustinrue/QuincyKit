@@ -99,6 +99,4 @@
 {/foreach}
 </table>
 </form>
-</div>
-</body>
-</html>
+{include "footer.tpl"}
